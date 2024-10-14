@@ -68,33 +68,37 @@ function FindThumbnails() {
 }
 
 // Looks for all thumbnails and applies overlay
+// Looks for all thumbnails and applies multiple overlays
 function applyOverlayToThumbnails() {
-    thumbnailElements = FindThumbnails()
+    const thumbnailElements = FindThumbnails();
 
-    // Apply overlay to each thumbnail
+    // Apply multiple overlays to each thumbnail
     thumbnailElements.forEach((thumbnailElement) => {
-        // Apply overlay and add to processed thumbnails
-        let loops = Math.random() > 0.001 ? 1 : 20; // Easter egg
+        let numOverlays = 30; // Random number between 1 and 5 overlays
 
-        for (let i = 0; i < loops; i++) {
-            // Get overlay image URL from your directory
+        for (let i = 0; i < numOverlays; i++) {
+            // Get a random overlay image from your directory
             const overlayImageIndex = getRandomImageFromDirectory();
             let flip = Math.random() < 0.25; // 25% chance to flip the image
-            let overlayImageURL
+            let overlayImageURL;
+
             if (flip && flipBlacklist && flipBlacklist.includes(overlayImageIndex)) { // Check if the image is on the blacklist
-                if (useAlternativeImages) { // Check if useAlternativeImages is true
+                if (useAlternativeImages) { // Use alternative images if set
                     overlayImageURL = getImageURL(`textFlipped/${overlayImageIndex}`);
                 } else {
                     overlayImageURL = getImageURL(overlayImageIndex);
                 }
                 flip = false;
-            } else { // Don't flip the image
+            } else {
                 overlayImageURL = getImageURL(overlayImageIndex);
             }
+            
+            // Apply each overlay
             applyOverlay(thumbnailElement, overlayImageURL, flip);
         }
     });
 }
+
 
 // Get the URL of an image
 function getImageURL(index) {
